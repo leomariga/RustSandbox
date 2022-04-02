@@ -19,6 +19,19 @@ https://doc.rust-lang.org/book/index.html
 
 `cargo doc --open` : Build documentation from all dependencies
 
+## `match`
+
+A `match` expression is made up of arms. An arm consists of a pattern to `match` against, and the code that should be run if the value given to `match` fits that arm’s pattern.
+
+Example handling error 
+
+```
+let myindex: u8 = match guess.trim().parse() {
+                Ok(num) => num,
+                Err(error) => panic!("Problem converting: {:?}", error),
+            };
+```
+
 ## Variables:
 
 Variables immutable by default, use `mut` otherwise. `mut` cannot alter variable **type**
@@ -54,3 +67,87 @@ let mut spaces = "   ";
 spaces = spaces.len();
 ```
 
+# Data types
+Rust is a statically typed language, which means that it must know the types of all variables at compile time
+
+Has some cool features when overflowing ints. You can set to:
+ - `wrapping_*` to wrap around the overflow
+ - `checked_*` to return `None`
+ - `overflowing_*` return the value (What value?) 
+ - `saturating_*` saturate to max and min value
+
+ int, float, bool, char, tuple, array
+
+### obs
+
+ **tuple:**  A tuple is a general way of grouping together a number of values with a variety of types into one compound type. Tuples have a fixed length: once declared, they cannot grow or shrink in size.
+
+**array** must have same type and have the same size. If you’re unsure whether to use an array or a vector, chances are you should use a vector.
+
+
+# Functions
+Rust code uses snake case as the conventional style for function and variable names, in which all letters are lowercase and underscores separate words.
+
+- **Statements** are instructions that perform some action and do not return a value.
+
+```
+let y = 6;
+```
+does not make sense to do somethink like:
+
+```
+let x = (let y = 6);
+```
+
+- **Expressions** evaluate to a resulting value. **Expressions do not include ending semicolons**. If you add a semicolon to the end of an expression, you turn it into a statement, and it will then not return a value
+
+```
+let y = {
+    let x = 3;
+    x + 1
+};
+```
+
+This expression returns `4`.
+
+- **Functions with Return values**
+
+There are no function calls, macros, or even `let` statements in the `five` function—just the number `5` by itself
+
+```
+fn five() -> i32 {
+    5
+}
+```
+
+# Control flow
+
+**loop** - Loops until something `break` it. you can create labels to specify which `loop` you want to break such as:
+
+```
+fn main() {
+    let mut count = 0;
+    'counting_up: loop {
+        println!("count = {}", count);
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {}", remaining);
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+
+        count += 1;
+    }
+    println!("End count = {}", count);
+}
+```
+
+You can return the value of a loop after the break like `break counter * 2;` 
+
+**for** and **while** similar to other languages.
