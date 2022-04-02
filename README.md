@@ -18,3 +18,39 @@ https://doc.rust-lang.org/book/index.html
 `cargo update` : Update crates packages of your project
 
 `cargo doc --open` : Build documentation from all dependencies
+
+## Variables:
+
+Variables immutable by default, use `mut` otherwise. `mut` cannot alter variable **type**
+
+## Constants 
+Constants are:
+    - Aways immutable
+    - Can be declared in any scope
+    - May be set only to a constant expression `const`.
+
+## Shadowing: 
+You can declare a new variable with the same name as a previous variable which means that the second variable’s value is what the program sees when the variable is used
+
+```
+let x = 5;
+
+let x = x + 1;
+```
+
+Shadowing is different from marking a variable as `mut`, because we’ll get a compile-time error if we accidentally try to reassign to this variable without using the `let` keyword. We’re effectively creating a new variable when we use the `let` keyword again, we can change the type of the value but reuse the same name
+
+This works (shadowing):
+
+```
+let spaces = "   ";
+let spaces = spaces.len();
+```
+
+This dont (we’re not allowed to mutate a variable’s type)
+
+```
+let mut spaces = "   ";
+spaces = spaces.len();
+```
+
