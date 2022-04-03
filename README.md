@@ -25,7 +25,7 @@ A `match` expression is made up of arms. An arm consists of a pattern to `match`
 
 Example handling error 
 
-```
+``` rust
 let myindex: u8 = match guess.trim().parse() {
                 Ok(num) => num,
                 Err(error) => panic!("Problem converting: {:?}", error),
@@ -45,7 +45,7 @@ Constants are:
 ## Shadowing: 
 You can declare a new variable with the same name as a previous variable which means that the second variable’s value is what the program sees when the variable is used
 
-```
+``` rust
 let x = 5;
 
 let x = x + 1;
@@ -55,14 +55,14 @@ Shadowing is different from marking a variable as `mut`, because we’ll get a c
 
 This works (shadowing):
 
-```
+``` rust
 let spaces = "   ";
 let spaces = spaces.len();
 ```
 
 This dont (we’re not allowed to mutate a variable’s type)
 
-```
+``` rust
 let mut spaces = "   ";
 spaces = spaces.len();
 ```
@@ -101,7 +101,7 @@ let x = (let y = 6);
 
 - **Expressions** evaluate to a resulting value. **Expressions do not include ending semicolons**. If you add a semicolon to the end of an expression, you turn it into a statement, and it will then not return a value
 
-```
+``` rust
 let y = {
     let x = 3;
     x + 1
@@ -114,7 +114,7 @@ This expression returns `4`.
 
 There are no function calls, macros, or even `let` statements in the `five` function—just the number `5` by itself
 
-```
+``` rust
 fn five() -> i32 {
     5
 }
@@ -124,7 +124,7 @@ fn five() -> i32 {
 
 **loop** - Loops until something `break` it. you can create labels to specify which `loop` you want to break such as:
 
-```
+``` rust
 fn main() {
     let mut count = 0;
     'counting_up: loop {
@@ -151,3 +151,56 @@ fn main() {
 You can return the value of a loop after the break like `break counter * 2;` 
 
 **for** and **while** similar to other languages.
+
+
+# Ownership
+
+
+Ownership is a set of rules that governs how a Rust program manages memory. 
+
+First, let’s take a look at the ownership rules. Keep these rules in mind as we work through the examples that illustrate them:
+
+Each value in Rust has a variable that’s called its owner.
+There can only be one owner at a time. When the owner goes out of scope, the value will be dropped.
+
+
+- string literal: We know the content in compilation time but immutable.
+- With `String` type in order to support a mutable, growable piece of text, we need to allocate an amount of memory on the heap, unknown at compile time, to hold the contents. This means:
+
+The memory must be requested from the memory allocator at runtime. We need a way of returning this memory to the allocator when we’re done with our String.
+
+muita coisa pra escrever, ler aqui:
+
+https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html
+
+String has its memory freed when passing through a function like this:
+
+``` rust
+fn main() {
+    let s = String::from("hello");  // s comes into scope
+
+    takes_ownership(s);             // s's value moves into the function...
+                                    // ... and so is no longer valid here
+
+    let x = 5;                      // x comes into scope
+
+    makes_copy(x);                  // x would move into the function,
+                                    // but i32 is Copy, so it's okay to still
+                                    // use x afterward
+
+} // Here, x goes out of scope, then s. But because s's value was moved, nothing
+  // special happens.
+
+fn takes_ownership(some_string: String) { // some_string comes into scope
+    println!("{}", some_string);
+} // Here, some_string goes out of scope and `drop` is called. The backing
+  // memory is freed.
+
+fn makes_copy(some_integer: i32) { // some_integer comes into scope
+    println!("{}", some_integer);
+} // Here, some_integer goes out of scope. Nothing special happens.
+```
+
+
+The ownership of a variable follows the same pattern every time: assigning a value to another variable moves it. When a variable that includes data on the heap goes out of scope, the value will be cleaned up by drop unless ownership of the data has been moved to another variable.
+
