@@ -204,3 +204,135 @@ fn makes_copy(some_integer: i32) { // some_integer comes into scope
 
 The ownership of a variable follows the same pattern every time: assigning a value to another variable moves it. When a variable that includes data on the heap goes out of scope, the value will be cleaned up by drop unless ownership of the data has been moved to another variable.
 
+
+## References
+
+A reference is like a pointer in that it’s an address we can follow to access data stored at that address that is owned by some other variable. Unlike a pointer, a reference is guaranteed to point to a valid value of a particular type
+
+
+``` rust
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize { // s is a reference to a String
+    s.len()
+} // Here, s goes out of scope. But because it does not have ownership of what
+  // it refers to, nothing happens.
+```
+
+This code don't work:
+
+``` rust
+
+fn main() {
+    let reference_to_nothing = dangle();
+}
+
+fn dangle() -> &String { // dangle returns a reference to a String
+
+    let s = String::from("hello"); // s is a new String
+
+    &s // we return a reference to the String, s
+} // Here, s goes out of scope, and is dropped. Its memory goes away.
+  // Danger!
+
+```
+
+This don't:
+
+``` rust
+
+fn main() {
+    let reference_to_nothing = no_dangle();
+}
+
+fn no_dangle() -> String {
+    let s = String::from("hello");
+
+    s
+}
+
+```
+
+The `&s1` syntax lets us create a reference that refers to the value of `s1` but does not own it. We call the action of creating a reference borrowing. 
+
+Let’s recap what we’ve discussed about references:
+
+    - At any given time, you can have either one mutable reference or any number of immutable references.
+
+    - References must always be valid.
+
+
+## Slices
+
+``` rust
+
+let s = "Hello, world!";
+
+```
+
+The type of s here is `&str`: it’s a slice pointing to that specific point of the binary. This is also why string literals are immutable; `&str` is an immutable reference.
+
+# Struct
+
+Rust has this interesting thing that you dont need to specify field with the same name as parameters of a function:
+
+This:
+
+``` rust
+fn build_user(email: String, username: String) -> User {
+    User {
+        email: email,
+        username: username,
+        active: true,
+        sign_in_count: 1,
+    }
+}
+```
+
+Is equal to:
+
+
+``` rust
+fn build_user(email: String, username: String) -> User {
+    User {
+        email,
+        username,
+        active: true,
+        sign_in_count: 1,
+    }
+}
+```
+
+We can also create another user2 with parameters from user1 such as:
+
+``` rust
+fn main() {
+    // --snip--
+
+    let user2 = User {
+        active: user1.active,
+        username: user1.username,
+        email: String::from("another@example.com"),
+        sign_in_count: user1.sign_in_count,
+    };
+}
+```
+
+The same as: 
+
+``` rust
+fn main() {
+    // --snip--
+
+    let user2 = User {
+        email: String::from("another@example.com"),
+        ..user1
+    };
+}
+```
