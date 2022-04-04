@@ -336,3 +336,34 @@ fn main() {
     };
 }
 ```
+
+### Tuple structs:
+
+``` rust
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+fn main() {
+    let black = Color(0, 0, 0);
+    let origin = Point(0, 0, 0);
+}
+```
+
+## Method Systax
+
+Methods are similar to functions: we declare them with the fn keyword and a name, they can have parameters and a return value, and they contain some code that’s run when the method is called from somewhere else. Unlike functions, methods are defined within the context of a struct (or an enum or a trait object, which we cover in Chapters 6 and 17, respectively), and their first parameter is always `self`, which represents the instance of the struct the method is being called on.
+
+
+# Building a project
+
+
+- Packages: A Cargo feature that lets you build, test, and share crates
+
+- Crates: A tree of modules that produces a library or executable
+
+- Modules and use: Let you control the organization, scope, and privacy of paths
+
+- Paths: A way of naming an item, such as a struct, function, or module
+
+
+A **crate** is a binary or library. The crate root is a source file that the Rust compiler starts from and makes up the root module of your crate. A **package** is one or more crates that provide a set of functionality. A package contains a Cargo.toml file that describes how to build those crates.
